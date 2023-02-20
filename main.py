@@ -1,7 +1,9 @@
+""" The main entrypoint for the song id api """
+
+import os
 from datetime import datetime
 
 import dotenv
-import os
 from fastapi import FastAPI
 from shazamio import Shazam
 
@@ -15,11 +17,13 @@ app = FastAPI()
 
 @app.get("/")
 def ger_health():
+    """ Simple health check route """
     return "OK"
 
 
 @app.get("/identify/{creator}")
 async def get_song_from_creator(creator: str):
+    """ Identify a song based on creator name """
     print(f"Received song ID request for {creator}")
     start_time = datetime.utcnow().timestamp()
     created_file = get_stream_from_creator(creator)
