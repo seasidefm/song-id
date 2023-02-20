@@ -43,7 +43,7 @@ def get_stream_from_creator(creator: str) -> str:
         '"aac"',
         "--retry-open",
         "4",
-        "-r",
+        "--output",
         filename,
         f"https://www.twitch.tv/{creator}",
         'best'
