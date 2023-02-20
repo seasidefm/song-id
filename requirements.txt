@@ -1,0 +1,5 @@
+shazamio
+python-dotenv
+FastAPI
+uvicorn
+streamlink
