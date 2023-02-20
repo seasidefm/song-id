@@ -13,6 +13,11 @@ dotenv.load_dotenv()
 app = FastAPI()
 
 
+@app.get("/")
+def ger_health():
+    return "OK"
+
+
 @app.get("/identify/{creator}")
 async def get_song_from_creator(creator: str):
     print(f"Received song ID request for {creator}")
@@ -32,4 +37,3 @@ async def get_song_from_creator(creator: str):
     print(f"Handled song id in {end_time - start_time}s")
 
     return out
-
