@@ -5,6 +5,7 @@ from datetime import datetime
 
 def get_stream_from_creator(creator: str) -> str:
     """ Take a creator handle and attempt to get the stream bytes """
+    print("Creating streamlink session")
     session = Streamlink()
 
     # General Settings / Stream Settings
@@ -23,6 +24,7 @@ def get_stream_from_creator(creator: str) -> str:
 
     best_stream: stream.Stream = streams.get('best')
 
+    print("Streaming to disk...")
     stream_bytes = best_stream.open()
 
     timestamp = datetime.utcnow().timestamp()
@@ -31,4 +33,5 @@ def get_stream_from_creator(creator: str) -> str:
         mp4_file.writelines(stream_bytes.readlines())
         mp4_file.close()
 
+    print("Done streaming!")
     return filename

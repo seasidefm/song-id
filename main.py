@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import dotenv
 import os
 from fastapi import FastAPI
@@ -13,6 +15,8 @@ app = FastAPI()
 
 @app.get("/identify/{creator}")
 async def get_song_from_creator(creator: str):
+    print(f"Received song ID request for {creator}")
+    start_time = datetime.utcnow().timestamp()
     created_file = get_stream_from_creator(creator)
     formatted_file = convert_mp4_to_mp3(created_file)
 
@@ -22,6 +26,10 @@ async def get_song_from_creator(creator: str):
     # Cleanup
     os.remove(created_file)
     os.remove(formatted_file)
+
+    end_time = datetime.utcnow().timestamp()
+
+    print(f"Handled song id in {end_time - start_time}s")
 
     return out
 
