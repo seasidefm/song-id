@@ -27,17 +27,22 @@ async def get_song_from_creator(creator: str):
     print(f"Received song ID request for {creator}")
     start_time = datetime.utcnow().timestamp()
     created_file = get_stream_from_creator(creator)
-    formatted_file = convert_mp4_to_mp3(created_file)
+    # formatted_file = convert_mp4_to_mp3(created_file)
+    #
+    # # Check shazam matches
+    # shazam = Shazam()
+    # out = await shazam.recognize_song(formatted_file)
+    #
+    # # Check audd.io matches
+    #
+    #
+    # # Cleanup
+    # os.remove(created_file)
+    # os.remove(formatted_file)
+    #
+    # end_time = datetime.utcnow().timestamp()
+    #
+    # print(f"Handled song id in {end_time - start_time}s")
 
-    shazam = Shazam()
-    out = await shazam.recognize_song(formatted_file)
-
-    # Cleanup
-    os.remove(created_file)
-    os.remove(formatted_file)
-
-    end_time = datetime.utcnow().timestamp()
-
-    print(f"Handled song id in {end_time - start_time}s")
-
-    return out
+    # return
+    return "TESTING, PLEASE IGNORE"
