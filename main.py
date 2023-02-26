@@ -1,5 +1,5 @@
 """ The main entrypoint for the song id api """
-
+import json
 import os
 from datetime import datetime
 
@@ -57,19 +57,23 @@ async def get_song_from_creator(creator: str):
     # Recognize with ACR
     acr_result = acr_identify(formatted_file)
 
-    # acr_song = {}
-    # if acr_result is not None and acr_result.result_type == 0:
-    #     acr_song = {
-    #         "title": acr_result.metadata.get('music')[0].get('title'),
-    #         "artist": acr_result.metadata.get('music')[0].get('artists')[0].get('name'),
-    #         "link": acr_result.metadata.get('music')[0].get('external_metadata').get('youtube').get('vid')
-    #     }
-    # else:
+    print(json.dumps(acr_result, indent=4, sort_keys=True))
+
     acr_song = {
         "title": None,
         "artist": None,
         "link": None
     }
+    if acr_result is not None and acr_result.get('result_type', 1) == 0:
+        track = acr_result.get('metadata').get('music')[0]
+
+        if track is not None:
+            acr_song = {
+                "title": track.get('title'),
+                "artist": track.get('artists')[0].get('name'),
+                # "link": external_metadata.get(external_platform).get('vid')
+                "link": ""
+            }
 
     # Cleanup
     os.remove(created_file)

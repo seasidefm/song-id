@@ -62,6 +62,4 @@ def acr_identify(filename: str):
     if data.get('result_type') != 0:
         return None
 
-    return AcrResult(
-        **r.json()
-    )
+    return data

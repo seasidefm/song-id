@@ -151,3 +151,10 @@ class AcrResult:
         self.metadata = metadata
         self.cost_time = cost_time
         self.status = status
+
+# external_metadata = metadata.get('music')[0].get('external_metadata')
+# track = external_metadata.get('deezer').get('track')
+# album = external_metadata.get('deezer').get('album')
+# artists = external_metadata.get('deezer').get('artists')
+# {
+#     'result_type': 0, 'metadata': {'timestamp_utc': '2023-02-26 22:20:47', 'music': [{'album': {'name': 'Palmscapes'}, 'score': 100, 'release_date': '2021-06-04', 'artists': [{'name': 'Hotel Pools'}], 'external_ids': {'isrc': 'QZES62147290', 'upc': '196052847585'}, 'external_metadata': {'deezer': {'artists': [{'name': 'Hotel Pools'}], 'album': {'name': ''}, 'track': {'id': '1290221242', 'name': 'Oceanside'}}, 'spotify': {'artists': [{'name': 'Hotel Pools'}], 'album': {'name': 'Palmscapes'}, 'track': {'id': '0HcM1AiNLkjq5qW68siA1K', 'name': 'Oceanside'}}}, 'db_end_time_offset_ms': 188260, 'sample_begin_time_offset_ms': 0, 'sample_end_time_offset_ms': 9760, 'play_offset_ms': 188260, 'result_from': 1, 'label': 'Wild Nature / Stratford Ct.', 'acrid': 'ec0f48014632b53b2f9c64f662c257de', 'db_begin_time_offset_ms': 178620, 'duration_ms': 206260, 'title': 'Oceanside'}]}, 'cost_time': 0.53299999237061, 'status': {'msg': 'Success', 'version': '1.0', 'code': 0}}
