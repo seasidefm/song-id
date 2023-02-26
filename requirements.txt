@@ -1,5 +1,7 @@
-shazamio
-python-dotenv
-FastAPI
+shazamio~=0.3.1.1
+python-dotenv~=0.21.1
+FastAPI~=0.92.0
 uvicorn
 streamlink
+
+requests~=2.28.2
