@@ -52,25 +52,14 @@ class StreamWatcher:
         print(f"Starting stream watcher for {creator}")
 
         try:
-            # Get the stream
-            stream = self.stream_link.get_best_stream(creator)
-            file_name = f"{creator}.mp4"
+            file_name = f"{self.base_dir}/{creator}.mp4"
 
-            if self.osfs.exists(file_name):
-                # Delete the old file
-                self.osfs.remove(file_name)
-
-            # Write the stream to memory
-            with self.osfs.open(file_name, 'wb') as stream_file:
-                for data in stream.open():
-                    stream_file.write(data)
-
-                stream_file.close()
+            self.stream_link.stream_via_cli(creator, file_name)
 
             return JobOutput(
                 result=JobResult.SUCCESS,
                 data={
-                    "file_name": f"{self.base_dir}/{file_name}"
+                    "file_name": file_name
                 }
             )
 

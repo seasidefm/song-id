@@ -17,15 +17,39 @@ class StreamFetcher:
         """ Create a new streamlink session """
         self.session = Streamlink()
 
-        # General Settings / Stream Settings
-        self.session.set_option('hls-duration', 5)
-        self.session.set_option('ffmpeg-audio-transcode', 'aac')
-        self.session.set_option('retry-open', 10)
-
         # Twitch options
         self.session.set_option('twitch-low-latency', True)
         self.session.set_option('twitch-disable-ads', True)
         self.session.set_option('twitch-api-header', getenv('WATCH_TOKEN'))
+
+        # General Settings / Stream Settings
+        self.session.set_option('hls-duration', 4)
+        self.session.set_option('ffmpeg-audio-transcode', 'aac')
+        self.session.set_option('retry-open', 4)
+        self.session.set_option('output', f'{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4')
+
+        # command = [
+        #     'streamlink',
+        #     f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
+        #     "--twitch-disable-ads",
+        #     "--twitch-low-latency",
+        #     "--hls-duration",
+        #     '00:05',
+        #     "--ffmpeg-audio-transcode",
+        #     '"aac"',
+        #     "--retry-open",
+        #     "4",
+        #     "--output",
+        #     filename,
+        #     f"https://www.twitch.tv/{creator}",
+        #     'best'
+        # ]
+        #
+        # with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
+        #     out = proc.stdout.read()
+        #
+        #     for line in out.splitlines():
+        #         print(">>> " + str(line))
 
         # Load streams here
         self.session.load_builtin_plugins()
@@ -35,6 +59,32 @@ class StreamFetcher:
         streams = self.session.streams(f"https://wwww.twitch.tv/{creator}")
 
         return streams.get('best')
+
+    def stream_via_cli(self, creator: str, filename: str):
+        """ Stream via CLI """
+
+        command = [
+            'streamlink',
+            f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
+            "--twitch-disable-ads",
+            "--twitch-low-latency",
+            "--hls-duration",
+            '00:05',
+            "--ffmpeg-audio-transcode",
+            '"aac"',
+            "--retry-open",
+            "4",
+            "--output",
+            filename,
+            f"https://www.twitch.tv/{creator}",
+            'best'
+        ]
+
+        with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
+            out = proc.stdout.read()
+
+            for line in out.splitlines():
+                print(">>> " + str(line))
 
 
 def get_stream_from_creator(creator: str) -> str:
@@ -69,8 +119,8 @@ def get_stream_from_creator(creator: str) -> str:
         f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
         "--twitch-disable-ads",
         "--twitch-low-latency",
-        # "--hls-duration",
-        # '00:08',
+        "--hls-duration",
+        '00:05',
         "--ffmpeg-audio-transcode",
         '"aac"',
         "--retry-open",
