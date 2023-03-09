@@ -74,6 +74,8 @@ class StreamFetcher:
             '"aac"',
             "--retry-open",
             "4",
+            "--stream-segment-threads",
+            "3",
             "--output",
             filename,
             f"https://www.twitch.tv/{creator}",
