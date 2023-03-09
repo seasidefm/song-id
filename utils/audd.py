@@ -2,7 +2,7 @@ import requests
 import os
 
 
-def audd_recognize_song(filename: str):
+async def audd_recognize_song(filename: str):
     data = {
         'api_token': os.getenv("AUDD_KEY"),
         'return': 'apple_music,spotify',

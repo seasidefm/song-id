@@ -17,7 +17,7 @@ import requests
 from utils.acr_class import AcrResult
 
 
-def acr_identify(filename: str):
+async def acr_identify(filename: str):
     '''
     Replace "###...###" below with your project's host, access_key and access_secret.
     '''
