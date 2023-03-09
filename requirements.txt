@@ -4,5 +4,5 @@ FastAPI==0.93.0
 uvicorn
 streamlink==5.3.1
 fs~=2.4.16
-pydantic~=1.8.2
+pydantic
 requests~=2.28.2
