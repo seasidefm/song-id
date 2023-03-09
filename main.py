@@ -1,19 +1,10 @@
 """ The main entrypoint for the song id api """
-import json
-import os
-from contextlib import asynccontextmanager
-from datetime import datetime
 from queue import Queue
 
 import dotenv
 from fastapi import FastAPI
-from shazamio import Shazam
 
 from stream_watcher import StreamWatcher, JobResult
-from utils.acr_cloud import acr_identify
-from utils.audd import audd_recognize_song
-from utils.audd_class import AuddResponse
-from utils.streamlink import get_stream_from_creator
 from utils.ffmpeg import convert_mp4_to_mp3
 
 dotenv.load_dotenv()
@@ -68,16 +59,16 @@ async def get_song_from_creator(creator: str):
             continue
 
         formatted_file = convert_mp4_to_mp3(result.data.get("file_name", None))
-        id = await watcher.get_song_id(formatted_file)
+        song_id = await watcher.get_song_id(formatted_file)
 
         # Short circuit again if we failed
-        if id is None:
+        if song_id is None:
             print("Could not get a song match! Retrying...")
             watcher.cleanup(creator)
             retry_count += 1
             continue
 
         watcher.cleanup(creator, True)
-        return id
+        return song_id
 
     return {"error": "Could not get a song match!"}
