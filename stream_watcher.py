@@ -1,11 +1,11 @@
 """ Stream watcher module. """
-import datetime
 from os import getenv
 from enum import Enum
 from typing import Union
 
 from fs.osfs import OSFS
 from pydantic import BaseModel
+from shazamio import Shazam
 
 from utils.audd import audd_recognize_song
 from utils.audd_class import AuddResponse
@@ -88,11 +88,17 @@ class StreamWatcher:
         """ Get the song ID from the stream """
         print(f"Getting song ID for {file_name}")
 
+        shazam = Shazam(language="en-US")
+
         # Get all the song IDs from different services
-        acr_id, audd_id = (
+        acr_id, audd_id, shazam = (
             await acr_identify(file_name),
-            await audd_recognize_song(file_name)
+            await audd_recognize_song(file_name),
+            await shazam.recognize_song(file_name)
         )
+
+        # ACRCloud
+        # ========
 
         acr_song = SongMatch(
             title=None,
@@ -111,6 +117,8 @@ class StreamWatcher:
                     link=""
                 )
 
+        # Audd.io
+        # ========
         audd_result = AuddResponse(**audd_id)
         audd_song = SongMatch(
             title=None,
@@ -124,16 +132,23 @@ class StreamWatcher:
                 link=audd_result.result.get('song_link', None)
             )
 
-        if acr_song.title is None and audd_song.title is None:
+        # Shazam
+        # ======
+
+        # If NONE of the services returned a song, return None
+        if acr_song.title is None and audd_song.title is None and shazam.get('track') is None:
             return None
 
         return {
             "acr": acr_song.dict(),
-            "audd": audd_song.dict()
+            "audd": audd_song.dict(),
+            "shazam": shazam
         }
 
-    def cleanup(self, creator: str):
+    def cleanup(self, creator: str, close_fs: bool = False):
         """ Cleanup the stream watcher """
         self.osfs.remove(f"{creator}.mp4")
         self.osfs.remove(f"{creator}.mp3")
-        self.osfs.close()
+
+        if close_fs:
+            self.osfs.close()

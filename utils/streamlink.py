@@ -18,7 +18,7 @@ class StreamFetcher:
         self.session = Streamlink()
 
         # General Settings / Stream Settings
-        self.session.set_option('hls-duration', 4)
+        self.session.set_option('hls-duration', 5)
         self.session.set_option('ffmpeg-audio-transcode', 'aac')
         self.session.set_option('retry-open', 10)
 
