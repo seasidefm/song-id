@@ -1,4 +1,5 @@
 """ Stream watcher module. """
+import asyncio
 from os import getenv
 from enum import Enum
 from typing import Union
@@ -63,13 +64,13 @@ class StreamWatcher:
                 }
             )
 
-        except AttributeError as e:
-            print(e)
+        except AttributeError as err:
+            print(err)
             print("Stream watcher got a bad stream request!")
             return JobOutput(
                 result=JobResult.FAILURE,
                 data={
-                    "error": str(e)
+                    "error": str(err)
                 }
             )
 
@@ -80,11 +81,11 @@ class StreamWatcher:
         shazam = Shazam(language="en-US")
 
         # Get all the song IDs from different services
-        acr_id, audd_id, shazam = (
-            await acr_identify(file_name),
-            await audd_recognize_song(file_name),
-            await shazam.recognize_song(file_name)
-        )
+        acr_id, audd_id, shazam = await asyncio.gather(*[
+            acr_identify(file_name),
+            audd_recognize_song(file_name),
+            shazam.recognize_song(file_name)
+        ])
 
         # ACRCloud
         # ========
