@@ -1,5 +1,6 @@
 """ Stream watcher module. """
 import asyncio
+import logging
 from os import getenv
 from enum import Enum
 from typing import Union
@@ -45,12 +46,13 @@ class StreamWatcher:
         self.base_dir = temp_dir
         self.osfs = OSFS(self.base_dir)
         self.stream_link = StreamFetcher()
-
         self.stream_link.init_session()
+
+        self.logger = logging.getLogger("song-id")
 
     async def run(self, creator: str) -> JobOutput:
         """ Run the stream watcher """
-        print(f"Starting stream watcher for {creator}")
+        self.logger.info("Starting stream watcher for %s", creator)
 
         try:
             file_name = f"{self.base_dir}/{creator}.mp4"
@@ -65,8 +67,9 @@ class StreamWatcher:
             )
 
         except AttributeError as err:
-            print(err)
-            print("Stream watcher got a bad stream request!")
+            self.logger.error("Stream watcher got a bad stream request for %s!", creator)
+            self.logger.error(err)
+
             return JobOutput(
                 result=JobResult.FAILURE,
                 data={
@@ -76,7 +79,7 @@ class StreamWatcher:
 
     async def get_song_id(self, file_name: str):
         """ Get the song ID from the stream """
-        print(f"Getting song ID for {file_name}")
+        self.logger.info("Getting song ID for %s", file_name)
 
         shazam = Shazam(language="en-US")
 

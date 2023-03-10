@@ -1,35 +1,21 @@
 """ The main entrypoint for the song id api """
-from queue import Queue
+
+import logging
+from logging.config import dictConfig
 
 import dotenv
 from fastapi import FastAPI
 
+from config import LogConfig
 from stream_watcher import StreamWatcher, JobResult
 from utils.ffmpeg import convert_mp4_to_mp3
 
 dotenv.load_dotenv()
 
-# Create a queue for the stream watcher
-queue = Queue()
+# Init logger
 
-
-# @asynccontextmanager
-# async def lifespan(_):
-#     """ The lifespan context manager for the FastAPI app """
-#     stream_watcher = StreamWatcher(queue)
-#     stream_watcher.start()
-#
-#     yield
-#
-#     stop_job = StreamJob(
-#         job_id=1,
-#         job_type=JobType.STOP,
-#         job_data={}
-#     )
-#
-#     # Stop the stream watcher
-#     queue.put(stop_job)
-
+dictConfig(LogConfig().dict())
+logger = logging.getLogger("song-id")
 
 # app = FastAPI(lifespan=lifespan)
 app = FastAPI()
@@ -44,7 +30,7 @@ def ger_health():
 @app.get("/identify/{creator}")
 async def get_song_from_creator(creator: str):
     """ Identify a song based on creator name """
-    print(f"Received song ID request for {creator}")
+    logger.info("Song ID request for %s", creator)
 
     watcher = StreamWatcher()
 
@@ -54,7 +40,7 @@ async def get_song_from_creator(creator: str):
 
         # Short circuit if we failed
         if result.result != JobResult.SUCCESS:
-            print(f"Stream watcher failed to get stream for {creator}! Retrying...")
+            logger.info("Stream watcher failed to get stream for %s! Retrying...", creator)
             retry_count += 1
             continue
 
@@ -63,7 +49,7 @@ async def get_song_from_creator(creator: str):
 
         # Short circuit again if we failed
         if song_id is None:
-            print("Could not get a song match! Retrying...")
+            logger.info("Could not get a song match for %s! Retrying...", creator)
             watcher.cleanup(creator)
             retry_count += 1
             continue

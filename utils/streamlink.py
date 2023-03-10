@@ -10,6 +10,7 @@ from streamlink.stream import stream
 
 class StreamFetcher:
     """ Streamlink wrapper class """
+
     def __init__(self):
         self.session = None
 
@@ -27,29 +28,6 @@ class StreamFetcher:
         self.session.set_option('ffmpeg-audio-transcode', 'aac')
         self.session.set_option('retry-open', 4)
         self.session.set_option('output', f'{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4')
-
-        # command = [
-        #     'streamlink',
-        #     f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
-        #     "--twitch-disable-ads",
-        #     "--twitch-low-latency",
-        #     "--hls-duration",
-        #     '00:05',
-        #     "--ffmpeg-audio-transcode",
-        #     '"aac"',
-        #     "--retry-open",
-        #     "4",
-        #     "--output",
-        #     filename,
-        #     f"https://www.twitch.tv/{creator}",
-        #     'best'
-        # ]
-        #
-        # with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
-        #     out = proc.stdout.read()
-        #
-        #     for line in out.splitlines():
-        #         print(">>> " + str(line))
 
         # Load streams here
         self.session.load_builtin_plugins()
@@ -73,7 +51,7 @@ class StreamFetcher:
             "--ffmpeg-audio-transcode",
             '"aac"',
             "--retry-open",
-            "4",
+            "6",
             "--stream-segment-threads",
             "3",
             "--output",
@@ -82,11 +60,9 @@ class StreamFetcher:
             'best'
         ]
 
+        # TODO: if you get errors when streaming, add logs here
         with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
-            out = proc.stdout.read()
-
-            for line in out.splitlines():
-                print(">>> " + str(line))
+            proc.wait()
 
 
 def get_stream_from_creator(creator: str) -> str:
@@ -138,7 +114,6 @@ def get_stream_from_creator(creator: str) -> str:
 
         for line in out.splitlines():
             print(">>> " + str(line))
-
 
     print("Done streaming!")
     return filename
