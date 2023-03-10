@@ -3,7 +3,7 @@
 import logging
 import subprocess
 
-COMMAND = "ffmpeg -hide_banner -loglevel error -i {FILE_NAME}.mp4 {FILE_NAME}.mp3"
+COMMAND = "ffmpeg -y -hide_banner -loglevel error -i {FILE_NAME}.mp4 {FILE_NAME}.mp3"
 
 
 def convert_mp4_to_mp3(filename: str) -> str:
