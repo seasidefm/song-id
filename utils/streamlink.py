@@ -47,7 +47,7 @@ class StreamFetcher:
             "--twitch-disable-ads",
             "--twitch-low-latency",
             "--hls-duration",
-            '00:05',
+            '00:10',
             "--ffmpeg-audio-transcode",
             '"aac"',
             "--retry-open",

@@ -87,7 +87,7 @@ class StreamWatcher:
         acr_id, audd_id, shazam = await asyncio.gather(*[
             acr_identify(file_name),
             audd_recognize_song(file_name),
-            shazam.recognize_song(file_name)
+            shazam.recognize_song(file_name),
         ])
 
         # ACRCloud
