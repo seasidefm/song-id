@@ -16,7 +16,7 @@ async def acoust_id_match(filename: str):
                 first = False
             else:
                 print()
-            print(f'%s - %s' % (artist, title))
+            print('%s - %s' % (artist, title))
             print('http://musicbrainz.org/recording/%s' % rid)
             print('Score: %i%%' % (int(score * 100)))
     except acoustid.NoBackendError:

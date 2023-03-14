@@ -7,6 +7,7 @@ import dotenv
 from fastapi import FastAPI
 
 from config import LogConfig
+from matcher import SongMatcher
 from stream_watcher import StreamWatcher, JobResult
 from utils.ffmpeg import convert_mp4_to_mp3
 
@@ -19,6 +20,7 @@ logger = logging.getLogger("song-id")
 
 # app = FastAPI(lifespan=lifespan)
 app = FastAPI()
+matcher = SongMatcher()
 
 
 @app.get("/")
@@ -45,7 +47,7 @@ async def get_song_from_creator(creator: str):
             continue
 
         formatted_file = convert_mp4_to_mp3(result.data.get("file_name", None))
-        song_id = await watcher.get_song_id(formatted_file)
+        song_id = await matcher.identify_from_file(formatted_file)
 
         # Short circuit again if we failed
         if song_id is None:

@@ -12,7 +12,6 @@ from shazamio import Shazam
 from utils.audd import audd_recognize_song
 from utils.audd_class import AuddResponse
 from utils.streamlink import StreamFetcher
-from utils.acr_cloud import acr_identify
 
 
 class JobResult(Enum):
