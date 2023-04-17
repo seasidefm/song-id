@@ -23,13 +23,13 @@ app = FastAPI()
 
 @app.get("/")
 def ger_health():
-    """ Simple health check route """
+    """Simple health check route"""
     return "OK"
 
 
 @app.get("/identify/{creator}")
 async def get_song_from_creator(creator: str):
-    """ Identify a song based on creator name """
+    """Identify a song based on creator name"""
     logger.info("Song ID request for %s", creator)
 
     watcher = StreamWatcher()
@@ -40,7 +40,9 @@ async def get_song_from_creator(creator: str):
 
         # Short circuit if we failed
         if result.result != JobResult.SUCCESS:
-            logger.info("Stream watcher failed to get stream for %s! Retrying...", creator)
+            logger.info(
+                "Stream watcher failed to get stream for %s! Retrying...", creator
+            )
             retry_count += 1
             continue
 
