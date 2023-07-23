@@ -35,6 +35,7 @@ class SongMatch(BaseModel):
     title: Union[str, None]
     artist: Union[str, None]
     link: Union[str, None]
+    album: Union[str, None]
 
 
 class StreamWatcher:
@@ -98,14 +99,24 @@ class StreamWatcher:
         acr_song = SongMatch(title=None, artist=None, link=None)
 
         if acr_id is not None and acr_id.get("result_type", 1) == 0:
+            custom_track = acr_id.get("metadata").get("custom_files")
             track = acr_id.get("metadata").get("music")[0]
 
+            # Try a custom match first
+            if custom_track:
+                acr_song = SongMatch(
+                    title=custom_track.get("title"),
+                    artist=custom_track.get("artist"),
+                    album=custom_track.get("album"),
+                )
+
+            # Test out a normal match second
             if track is not None:
                 acr_song = SongMatch(
                     title=track.get("title"),
                     artist=track.get("artists")[0].get("name"),
-                    # "link": external_metadata.get(external_platform).get('vid')
-                    link="",
+                    album=track.get("album").get("name"),
+                    # TODO: Find out how to link via ACR cloud or just dump metadata here
                 )
 
         # Audd.io
@@ -117,6 +128,7 @@ class StreamWatcher:
                 title=audd_result.result.get("title", None),
                 artist=audd_result.result.get("artist", None),
                 link=audd_result.result.get("song_link", None),
+                album=audd_result.result.get("album", None),
             )
 
         # Shazam

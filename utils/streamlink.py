@@ -1,5 +1,5 @@
 """ Streamlink related utils """
-
+import logging
 from os import getenv
 from datetime import datetime
 from subprocess import Popen, PIPE, STDOUT
@@ -13,6 +13,7 @@ class StreamFetcher:
 
     def __init__(self):
         self.session = None
+        self.logger = logging.getLogger('song-id')
 
     def init_session(self):
         """ Create a new streamlink session """
@@ -60,9 +61,14 @@ class StreamFetcher:
             'best'
         ]
 
+        self.logger.info(' '.join(command))
+
         # TODO: if you get errors when streaming, add logs here
         with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
-            proc.wait()
+            code = proc.wait()
+            if code != 0:
+                self.logger.error(f"Received code {code} from stream watcher thread")
+
 
 
 def get_stream_from_creator(creator: str) -> str:
