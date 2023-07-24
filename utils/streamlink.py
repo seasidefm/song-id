@@ -61,14 +61,17 @@ class StreamFetcher:
             'best'
         ]
 
-        self.logger.info(' '.join(command))
+        self.logger.debug(
+            command
+        )
 
-        # TODO: if you get errors when streaming, add logs here
         with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
+            for line in proc.stdout:
+                self.logger.debug(line.decode('utf-8').strip())
+
             code = proc.wait()
             if code != 0:
                 self.logger.error(f"Received code {code} from stream watcher thread")
-
 
 
 def get_stream_from_creator(creator: str) -> str:

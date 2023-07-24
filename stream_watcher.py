@@ -1,5 +1,6 @@
 """ Stream watcher module. """
 import asyncio
+import json
 import logging
 from os import getenv
 from enum import Enum
@@ -100,6 +101,7 @@ class StreamWatcher:
 
         if acr_id is not None and acr_id.get("result_type", 1) == 0:
             custom_track = acr_id.get("metadata").get("custom_files")
+            logging.getLogger(json.dumps(acr_id.get("metadata"), indent=4))
             track = acr_id.get("metadata").get("music")[0]
 
             # Try a custom match first

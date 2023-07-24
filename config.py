@@ -7,7 +7,7 @@ class LogConfig(BaseModel):
     """Logging configuration to be set for the server"""
 
     LOGGER_NAME: str = "song-id"
-    LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
+    LOG_FORMAT: str = "%(levelprefix)s %(message)s"
     LOG_LEVEL: str = "DEBUG"
 
     # Logging config
