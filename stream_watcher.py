@@ -123,15 +123,17 @@ class StreamWatcher:
 
         # Audd.io
         # ========
-        audd_result = AuddResponse(**audd_id)
         audd_song = SongMatch(title=None, artist=None, link=None)
-        if audd_result.result is not None:
-            audd_song = SongMatch(
-                title=audd_result.result.get("title", None),
-                artist=audd_result.result.get("artist", None),
-                link=audd_result.result.get("song_link", None),
-                album=audd_result.result.get("album", None),
-            )
+
+        if audd_id.get("error", None) is None:
+            audd_result = AuddResponse(**audd_id)
+            if audd_result.result is not None:
+                audd_song = SongMatch(
+                    title=audd_result.result.get("title", None),
+                    artist=audd_result.result.get("artist", None),
+                    link=audd_result.result.get("song_link", None),
+                    album=audd_result.result.get("album", None),
+                )
 
         # Shazam
         # ======
