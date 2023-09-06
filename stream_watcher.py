@@ -1,6 +1,5 @@
 """ Stream watcher module. """
 import asyncio
-import json
 import logging
 from os import getenv
 from enum import Enum
@@ -13,7 +12,6 @@ from shazamio import Shazam
 from utils.audd import audd_recognize_song
 from utils.audd_class import AuddResponse
 from utils.streamlink import StreamFetcher
-from utils.acr_cloud import acr_identify
 
 
 class JobResult(Enum):
@@ -86,40 +84,15 @@ class StreamWatcher:
         shazam = Shazam(language="en-US")
 
         # Get all the song IDs from different services
-        acr_id, audd_id, shazam = await asyncio.gather(
+        audd_id, shazam = await asyncio.gather(
             *[
-                acr_identify(file_name),
                 audd_recognize_song(file_name),
                 shazam.recognize_song(file_name),
             ]
         )
 
-        # ACRCloud
-        # ========
-
-        acr_song = SongMatch(title=None, artist=None, link=None)
-
-        if acr_id is not None and acr_id.get("result_type", 1) == 0:
-            custom_track = acr_id.get("metadata").get("custom_files")
-            logging.getLogger(json.dumps(acr_id.get("metadata"), indent=4))
-            track = acr_id.get("metadata").get("music")[0]
-
-            # Try a custom match first
-            if custom_track:
-                acr_song = SongMatch(
-                    title=custom_track.get("title"),
-                    artist=custom_track.get("artist"),
-                    album=custom_track.get("album"),
-                )
-
-            # Test out a normal match second
-            if track is not None:
-                acr_song = SongMatch(
-                    title=track.get("title"),
-                    artist=track.get("artists")[0].get("name"),
-                    album=track.get("album").get("name"),
-                    # TODO: Find out how to link via ACR cloud or just dump metadata here
-                )
+        # Custom
+        # =========
 
         # Audd.io
         # ========
@@ -140,13 +113,12 @@ class StreamWatcher:
 
         # If NONE of the services returned a song, return None
         if (
-            acr_song.title is None
-            and audd_song.title is None
+            audd_song.title is None
             and shazam.get("track") is None
         ):
             return None
 
-        return {"acr": acr_song.dict(), "audd": audd_song.dict(), "shazam": shazam}
+        return {"audd": audd_song.dict(), "shazam": shazam}
 
     def cleanup(self, creator: str, close_fs: bool = False):
         """Cleanup the stream watcher"""
