@@ -1,4 +1,9 @@
 """ The main entrypoint for the song id api """
+import datetime
+
+import base64
+
+from typing import Literal
 
 import logging
 from logging.config import dictConfig
@@ -7,6 +12,7 @@ import dotenv
 from fastapi import FastAPI
 
 from config import LogConfig
+from sampling import Sampler, SupportedPlatform
 from stream_watcher import StreamWatcher, JobResult
 from utils.ffmpeg import convert_mp4_to_mp3
 
@@ -21,10 +27,25 @@ logger = logging.getLogger("song-id")
 app = FastAPI()
 
 
-@app.get("/")
-def ger_health():
+@app.get("/health")
+def get_health():
     """Simple health check route"""
-    return "OK"
+    return {"status": "ok"}
+
+
+@app.get("/sample/{creator}")
+async def get_sample_from_creator(creator: str, platform: SupportedPlatform = "twitch", duration: int = 7):
+    logger.info("Sample request for %s", creator)
+
+    sampler = Sampler(platform, creator)
+    sample_file = sampler.sample(duration)
+
+    return {
+        "creator": creator,
+        "duration": duration,
+        "timestamp": int(datetime.datetime.utcnow().timestamp()),
+        "data": base64.b64encode(open(sample_file, "rb").read())
+    }
 
 
 @app.get("/identify/{creator}")
