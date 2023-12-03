@@ -3,8 +3,6 @@ import datetime
 
 import base64
 
-from typing import Literal
-
 import logging
 from logging.config import dictConfig
 
