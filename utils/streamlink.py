@@ -1,5 +1,6 @@
 """ Streamlink related utils """
 import logging
+import os
 from os import getenv
 from datetime import datetime
 from subprocess import Popen, PIPE, STDOUT
@@ -14,6 +15,7 @@ class StreamFetcher:
     def __init__(self):
         self.session = None
         self.logger = logging.getLogger('song-id')
+        self.streamlink_bin = os.getenv("STREAMLINK_BIN")
 
     def init_session(self):
         """ Create a new streamlink session """
@@ -43,7 +45,7 @@ class StreamFetcher:
         """ Stream via CLI """
 
         command = [
-            'streamlink',
+            self.streamlink_bin,
             f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
             "--twitch-disable-ads",
             "--twitch-low-latency",
@@ -102,7 +104,7 @@ def get_stream_from_creator(creator: str) -> str:
     timestamp = datetime.utcnow().timestamp()
     filename = f"{getenv('TMP_DIR')}/{timestamp}-{creator}.mp4"
     command = [
-        'streamlink',
+        os.getenv("STREAMLINK_BIN"),
         f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
         "--twitch-disable-ads",
         "--twitch-low-latency",
