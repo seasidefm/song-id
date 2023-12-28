@@ -1,0 +1,8 @@
+shazamio~=0.3.1.1
+python-dotenv==1.0.0
+FastAPI==0.93.0
+uvicorn
+streamlink==5.3.1
+fs~=2.4.16
+pydantic
+requests~=2.28.2
