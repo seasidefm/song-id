@@ -84,7 +84,7 @@ class StreamWatcher:
         shazam = Shazam(language="en-US")
 
         # Get all the song IDs from different services
-        shazam = await asyncio.gather(
+        shazam_match = await asyncio.gather(
             shazam.recognize_song(file_name)
         )
 
@@ -111,7 +111,7 @@ class StreamWatcher:
         # If NONE of the services returned a song, return None
         if (
             audd_song.title is None
-            and shazam.get("track") is None
+            and shazam_match[0].get("track") is None
         ):
             return None
 
