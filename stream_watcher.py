@@ -115,7 +115,7 @@ class StreamWatcher:
         ):
             return None
 
-        return {"audd": audd_song.dict(), "shazam": shazam}
+        return {"audd": audd_song.dict(), "shazam": shazam_match[0]}
 
     def cleanup(self, creator: str, close_fs: bool = False):
         """Cleanup the stream watcher"""
