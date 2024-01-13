@@ -10,39 +10,41 @@ from streamlink.stream import stream
 
 
 class StreamFetcher:
-    """ Streamlink wrapper class """
+    """Streamlink wrapper class"""
 
     def __init__(self):
         self.session = None
-        self.logger = logging.getLogger('song-id')
+        self.logger = logging.getLogger("song-id")
         self.streamlink_bin = os.getenv("STREAMLINK_BIN")
 
     def init_session(self):
-        """ Create a new streamlink session """
+        """Create a new streamlink session"""
         self.session = Streamlink()
 
         # Twitch options
-        self.session.set_option('twitch-low-latency', True)
-        self.session.set_option('twitch-disable-ads', True)
-        self.session.set_option('twitch-api-header', getenv('WATCH_TOKEN'))
+        self.session.set_option("twitch-low-latency", True)
+        self.session.set_option("twitch-disable-ads", True)
+        self.session.set_option("twitch-api-header", getenv("WATCH_TOKEN"))
 
         # General Settings / Stream Settings
-        self.session.set_option('hls-duration', 4)
-        self.session.set_option('ffmpeg-audio-transcode', 'aac')
-        self.session.set_option('retry-open', 4)
-        self.session.set_option('output', f'{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4')
+        self.session.set_option("hls-duration", self)
+        self.session.set_option("ffmpeg-audio-transcode", "aac")
+        self.session.set_option("retry-open", 4)
+        self.session.set_option(
+            "output", f'{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
+        )
 
         # Load streams here
         self.session.load_builtin_plugins()
 
     def get_best_stream(self, creator: str) -> stream.Stream:
-        """ Take a creator handle and attempt to get the stream bytes """
+        """Take a creator handle and attempt to get the stream bytes"""
         streams = self.session.streams(f"https://wwww.twitch.tv/{creator}")
 
-        return streams.get('best')
+        return streams.get("best")
 
     def stream_via_cli(self, creator: str, filename: str):
-        """ Stream via CLI """
+        """Stream via CLI"""
 
         command = [
             self.streamlink_bin,
@@ -50,7 +52,7 @@ class StreamFetcher:
             "--twitch-disable-ads",
             "--twitch-low-latency",
             "--hls-duration",
-            '00:05',
+            "00:05",
             "--ffmpeg-audio-transcode",
             '"aac"',
             "--retry-open",
@@ -60,16 +62,14 @@ class StreamFetcher:
             "--output",
             filename,
             f"https://www.twitch.tv/{creator}",
-            'best'
+            "best",
         ]
 
-        self.logger.debug(
-            command
-        )
+        self.logger.debug(command)
 
         with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
             for line in proc.stdout:
-                self.logger.debug(line.decode('utf-8').strip())
+                self.logger.debug(line.decode("utf-8").strip())
 
             code = proc.wait()
             if code != 0:
@@ -77,7 +77,7 @@ class StreamFetcher:
 
 
 def get_stream_from_creator(creator: str) -> str:
-    """ Take a creator handle and attempt to get the stream bytes """
+    """Take a creator handle and attempt to get the stream bytes"""
     print("Creating streamlink session")
     # session = Streamlink()
     #
@@ -109,7 +109,7 @@ def get_stream_from_creator(creator: str) -> str:
         "--twitch-disable-ads",
         "--twitch-low-latency",
         "--hls-duration",
-        '00:05',
+        "00:05",
         "--ffmpeg-audio-transcode",
         '"aac"',
         "--retry-open",
@@ -117,7 +117,7 @@ def get_stream_from_creator(creator: str) -> str:
         "--output",
         filename,
         f"https://www.twitch.tv/{creator}",
-        'best'
+        "best",
     ]
 
     with Popen(command, stdout=PIPE, stderr=STDOUT) as proc:
