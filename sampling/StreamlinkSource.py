@@ -31,7 +31,7 @@ class StreamlinkSource(AudioSampler):
         if self.platform == "twitch":
             stream_link.set_option("twitch-low-latency", True)
             stream_link.set_option("twitch-disable-ads", True)
-            stream_link.set_option("twitch-api-header", getenv("WATCH_TOKEN"))
+            stream_link.set_option("twitch-api-header", f"Authorization=OAuth {getenv('WATCH_HEADER')}")
 
         stream_link.load_builtin_plugins()
 

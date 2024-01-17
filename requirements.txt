@@ -4,6 +4,7 @@ FastAPI==0.109.0
 uvicorn
 streamlink==6.5.0
 fs~=2.4.16
-pydantic
+pydantic~=1.10.13
 requests==2.31.0
-boto3
+boto3==1.34.19
+python-ffmpeg

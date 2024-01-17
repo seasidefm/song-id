@@ -24,7 +24,7 @@ class StreamFetcher:
         # Twitch options
         self.session.set_option("twitch-low-latency", True)
         self.session.set_option("twitch-disable-ads", True)
-        self.session.set_option("twitch-api-header", getenv("WATCH_TOKEN"))
+        self.session.set_option("twitch-api-header", getenv("WATCH_HEADER"))
 
         # General Settings / Stream Settings
         self.session.set_option("hls-duration", self)
@@ -48,7 +48,7 @@ class StreamFetcher:
 
         command = [
             self.streamlink_bin,
-            f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
+            f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_HEADER")}',
             "--twitch-disable-ads",
             "--twitch-low-latency",
             "--hls-duration",
@@ -89,7 +89,7 @@ def get_stream_from_creator(creator: str) -> str:
     # # Twitch options
     # session.set_option('twitch-low-latency', True)
     # session.set_option('twitch-disable-ads', True)
-    # session.set_option('twitch-api-header', getenv('WATCH_TOKEN'))
+    # session.set_option('twitch-api-header', getenv('WATCH_HEADER'))
     #
     # # Load streams here
     # session.load_builtin_plugins()
@@ -105,7 +105,7 @@ def get_stream_from_creator(creator: str) -> str:
     filename = f"{getenv('TMP_DIR')}/{timestamp}-{creator}.mp4"
     command = [
         os.getenv("STREAMLINK_BIN"),
-        f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_TOKEN")}',
+        f'--twitch-api-header=Authorization=OAuth {getenv("WATCH_HEADER")}',
         "--twitch-disable-ads",
         "--twitch-low-latency",
         "--hls-duration",
